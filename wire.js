@@ -99,7 +99,11 @@ var makeVector = function(xcor, ycor, xmag, ymag) {
 	};
 
 	angle += 90;
-	
+	var mag = Math.sqrt(vector.xmag * vector.xmag + vector.ymag * vector.ymag);
+	var fill = "rgb(" + (255 -Math.floor(-1*Math.log(mag)*5)) + "," + Math.floor(-1*Math.log(mag)*5) + "," + Math.floor(-1*Math.log(mag)*5) + " )";
+	vector.setAttribute("stroke", fill);
+	vector.setAttribute("stroke-width", 5);
+	console.log("stroke" , vector.getAttribute("stroke"));
 	//console.log(angle);
 	vector.setAttribute("transform", 'rotate(' + angle + ' ' + vector.xcor + ' ' + vector.ycor + ')' );
     };
@@ -286,7 +290,11 @@ var addWire = function(e) {
     cir.setAttribute("cy", e.offsetY);
     cir.setAttribute("r", 10);
     cir.setAttribute("fill", "blue");
+    if (wire_current == 1)
+	cir.setAttribute("fill", "red");
     cir.setAttribute("stroke", "black");
+    cir.setAttribute("stroke-width", 5);
+    
     //cir.setAttribute("onload", "makeDraggable(evt)");
     cir.current = wire_current;
     //so far this next line just prints the xcor of the vector
