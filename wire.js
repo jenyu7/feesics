@@ -26,15 +26,16 @@ var width = svg.getAttribute('width');
 
 
 //svg.addEventListener("click", function(e){console.log(e.offsetX, e.offsetY);} );
-svg.addEventListener("click", function(e){addWire(e); updateVectors(e); } );
+
+svg.addEventListener("click", function(e){addWire(e); updateVectors(e); console.log(vector_field[vector_field.length - 6][5].xcor,vector_field[vector_field.length - 6][5].ycor,vector_field[vector_field.length - 6][5].xmag,vector_field[vector_field.length - 6][5].ymag, e.offsetX, e.offsetY ) } );
 
 
 //var vector = {xmag:"500", color:"white"};
 var vector_field;
 
 var makeVector = function(xcor, ycor, xmag, ymag) {
-    var vector = document.createElementNS("http://www.w3.org/2000/svg", "line");
-
+    //var vector = document.createElementNS("http://www.w3.org/2000/svg", "line");
+    var vector = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
     vector.xcor = xcor;
     vector.ycor = ycor;
     vector.xmag = xmag;
@@ -48,12 +49,21 @@ var makeVector = function(xcor, ycor, xmag, ymag) {
 	var ydist = ycor - vector.ycor;
 	var xdist = xcor - vector.xcor;
 
-	var dist = Math.sqrt( ydist*ydist + xdist*xdist );
+	var dist = Math.sqrt( (ydist*ydist) + (xdist*xdist) );
+
+	var distAngle = Math.atan( ydist / xdist);
 	
-	var distAngle = Math.atan(ydist / xdist);
 	
-	var ymagchange = ( current * Math.sin(distAngle) ) / (dist * dist)
-	var xmagchange = ( current * Math.cos(distAngle) ) / (dist * dist)
+	//var ymagchange = ( current * Math.sin(distAngle) ) / (dist * dist)
+	if (xdist < 0) {
+	    var xmagchange = ( current * Math.cos(distAngle) ) / (dist * dist)
+	    var ymagchange = ( current *  Math.sin(distAngle) ) / (dist * dist)
+	} else {
+	    var xmagchange = ( current * -1 * Math.cos(distAngle) ) / (dist * dist)
+	    var ymagchange = ( current * -1 * Math.sin(distAngle) ) / (dist * dist)
+	}
+
+	
 	
 	vector.xmag += xmagchange;
 	vector.ymag += ymagchange;
@@ -63,7 +73,19 @@ var makeVector = function(xcor, ycor, xmag, ymag) {
 	if (isNaN( Math.atan(vector.ymag / vector.xmag) )) {
 	    angle = 0;
 	} else {
-	    angle = Math.atan(vector.ymag / vector.xmag) * (180 / Math.PI);
+	    if (vector.xmag < 0) {
+		if (vector.ymag < 0) {
+		    angle = Math.atan(vector.ymag / vector.xmag) * (180 / Math.PI) + 180;
+		} else {
+		    angle = Math.atan(vector.ymag / vector.xmag) * (180 / Math.PI) + 180;
+		};
+	    } else {
+		if (ymag < 0) {
+		    angle = Math.atan(vector.ymag / vector.xmag) * (180 / Math.PI);
+		} else {
+		    angle = Math.atan(vector.ymag / vector.xmag) * (180 / Math.PI);
+		};
+	    }
 	};
 	//console.log(angle);
 	vector.setAttribute("transform", 'rotate(' + angle + ' ' + vector.xcor + ' ' + vector.ycor + ')' );
@@ -71,10 +93,13 @@ var makeVector = function(xcor, ycor, xmag, ymag) {
     
     var radius = 15;
     //var vector = document.createElementNS("http://www.w3.org/2000/svg", "line");
-    vector.setAttribute("x1", xcor - radius);
-    vector.setAttribute("y1", ycor );
-    vector.setAttribute("x2", xcor + radius);
-    vector.setAttribute("y2", ycor );
+    //vector.setAttribute("x1", xcor - radius);
+    //vector.setAttribute("y1", ycor );
+    //vector.setAttribute("x2", xcor + radius);
+    //vector.setAttribute("y2", ycor );
+    //var pointsList = [ xcor - radius + ',' + ycor + ' ' + xcor + radius + ',' + ycor + 2 + ',' + xcor + radius + 2 + ' ' + ycor + ',' + xcor + radius + ' ' + ycor - 2 ]
+    var pointsList = [ [xcor - radius, ycor ], [xcor + radius, ycor ], [ xcor + radius, ycor + 2], [ xcor + radius + 2, ycor], [ xcor + radius, ycor - 2], [xcor + radius, ycor ] ]
+    vector.setAttribute("points" , pointsList) 
     vector.setAttribute("stroke-width", 1);
     vector.setAttribute("stroke", "black");
     var angle = 0;
@@ -169,7 +194,7 @@ var addWire = function(e) {
     cir.setAttribute("stroke", "black");
     cir.current = wire_current;
     //so far this next line just prints the xcor of the vector
-    cir.setAttribute("onclick", 'console.log(" this is a wire ",' + cir.current + ')' );
+    //cir.setAttribute("onclick", 'console.log(" this is a wire ",' + cir.current + ')' );
     svg.appendChild(cir)
 }
 
@@ -195,4 +220,14 @@ output.innerHTML = slider.value; // Display the default slider value
 slider.oninput = function() {
     output.innerHTML = this.value;
 }
+
+var currentSlider = document.getElementById("currentRange");
+var currentOutput = document.getElementById("currentOutput");
+currentOutput.innerHTML = currentSlider.value; // Display the default slider value
+currentSlider.oninput = function() {
+    currentOutput.innerHTML = this.value;
+    wire_current = this.value;
+}
+
  
+vector_field[vector_field.length - 6][5].setAttribute("stroke-width", "5");

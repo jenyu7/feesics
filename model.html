@@ -12,13 +12,20 @@
         yuh
       </p>
       <hr>
-      <svg id="vimage" height="600" width="1000" style="border: 1px solid;" onclick="console.log('html clicked')">
+      <svg id="vimage" height="600" width="1000" style="border: 1px solid;">
       </svg>
 
+      <div class="slidecontainer">
+	<input type="range" min="-1" max="1" value="1" step="2" class="slider" id="currentRange">
+	<p>Value: <span id="currentOutput"></span></p>
+      </div>
+      
       <div class="slidecontainer">
 	<input type="range" min="1" max="100" value="50" class="slider" id="myRange">
 	<p>Value: <span id="demo"></span></p>
       </div>
+
+      
       
     </center>
     <script src="https://d3js.org/d3.v4.min.js" charset="utf-8"></script>
