@@ -1,5 +1,5 @@
 var wire_current = 1; //or -1
-
+var wires = new Array()
 ////////////////////IMPORTANT THINGS
 /*
 
@@ -27,7 +27,17 @@ var width = svg.getAttribute('width');
 
 //svg.addEventListener("click", function(e){console.log(e.offsetX, e.offsetY);} );
 
-svg.addEventListener("click", function(e){addWire(e); updateVectors(e); console.log(vector_field[vector_field.length - 6][5].xcor,vector_field[vector_field.length - 6][5].ycor,vector_field[vector_field.length - 6][5].xmag,vector_field[vector_field.length - 6][5].ymag, e.offsetX, e.offsetY ) } );
+svg.addEventListener("click", function(e){
+    //updateVectors(e);
+    console.log(vector_field[vector_field.length - 6][5].xcor,vector_field[vector_field.length - 6][5].ycor,vector_field[vector_field.length - 6][5].xmag,vector_field[vector_field.length - 6][5].ymag, e.offsetX, e.offsetY )
+} );
+
+svg.addEventListener("mousedown", function(e){
+    selectedElement = e.target;
+    if (selectedElement.tagName != "circle") {
+	addWire(e);
+	updateVectors(e);    };
+} );
 
 
 //var vector = {xmag:"500", color:"white"};
@@ -87,9 +97,92 @@ var makeVector = function(xcor, ycor, xmag, ymag) {
 		};
 	    }
 	};
+
+	angle += 90;
+	
 	//console.log(angle);
 	vector.setAttribute("transform", 'rotate(' + angle + ' ' + vector.xcor + ' ' + vector.ycor + ')' );
     };
+    
+	
+	////////////////////////////////////
+	
+    vector.dragupdate = function(xcor, ycor, wire) {
+	var ydist = wire.ycor - vector.ycor;
+	var xdist = wire.xcor - vector.xcor;
+	console.log(wire.current)
+	
+	var dist = Math.sqrt( (ydist*ydist) + (xdist*xdist) );
+	
+	var distAngle = Math.atan( ydist / xdist);
+	
+	
+	//var ymagchange = ( current * Math.sin(distAngle) ) / (dist * dist)
+	if (xdist < 0) {
+	    var xmagchange = ( wire.current * Math.cos(distAngle) ) / (dist * dist)
+	    var ymagchange = ( wire.current *  Math.sin(distAngle) ) / (dist * dist)
+	} else {
+	    var xmagchange = ( wire.current * -1 * Math.cos(distAngle) ) / (dist * dist)
+	    var ymagchange = ( wire.current * -1 * Math.sin(distAngle) ) / (dist * dist)
+	}
+	
+	
+	
+	vector.xmag -= xmagchange;
+	vector.ymag -= ymagchange;
+	
+
+	//wire.xcor = xcor;
+	//wire.ycor = ycor;
+	
+	ydist = wire.getAttribute("cy") - vector.ycor;
+	xdist = wire.getAttribute("cx") - vector.xcor;
+	
+	dist = Math.sqrt( (ydist*ydist) + (xdist*xdist) );
+	
+	distAngle = Math.atan( ydist / xdist);
+	
+	
+	//var ymagchange = ( current * Math.sin(distAngle) ) / (dist * dist)
+	if (xdist < 0) {
+	    var xmagchange = ( wire.current * Math.cos(distAngle) ) / (dist * dist)
+	    var ymagchange = ( wire.current *  Math.sin(distAngle) ) / (dist * dist)
+	} else {
+	    var xmagchange = ( wire.current * -1 * Math.cos(distAngle) ) / (dist * dist)
+	    var ymagchange = ( wire.current * -1 * Math.sin(distAngle) ) / (dist * dist)
+	}
+
+	vector.xmag += xmagchange;
+	vector.ymag += ymagchange;
+	
+	
+	
+	//console.log(vector.xmag, vector.ymag);
+	//console.log(angle);
+	if (isNaN( Math.atan(vector.ymag / vector.xmag) )) {
+	    angle = 0;
+	} else {
+	    if (vector.xmag < 0) {
+		if (vector.ymag < 0) {
+		    angle = Math.atan(vector.ymag / vector.xmag) * (180 / Math.PI) + 180;
+		} else {
+		    angle = Math.atan(vector.ymag / vector.xmag) * (180 / Math.PI) + 180;
+		};
+	    } else {
+		if (ymag < 0) {
+		    angle = Math.atan(vector.ymag / vector.xmag) * (180 / Math.PI);
+		} else {
+		    angle = Math.atan(vector.ymag / vector.xmag) * (180 / Math.PI);
+		};
+	    }
+	};
+	
+	angle += 90;
+	
+	//console.log(angle);
+	vector.setAttribute("transform", 'rotate(' + angle + ' ' + vector.xcor + ' ' + vector.ycor + ')' );
+    };
+    
     
     var radius = 15;
     //var vector = document.createElementNS("http://www.w3.org/2000/svg", "line");
@@ -188,14 +281,18 @@ var displayVectors = function(){
 var addWire = function(e) {
     var cir = document.createElementNS("http://www.w3.org/2000/svg", "circle");
     cir.setAttribute("cx", e.offsetX);
+    cir.xcor = e.offsetX;
+    cir.ycor = e.offsetY;
     cir.setAttribute("cy", e.offsetY);
     cir.setAttribute("r", 10);
     cir.setAttribute("fill", "blue");
     cir.setAttribute("stroke", "black");
+    //cir.setAttribute("onload", "makeDraggable(evt)");
     cir.current = wire_current;
     //so far this next line just prints the xcor of the vector
     //cir.setAttribute("onclick", 'console.log(" this is a wire ",' + cir.current + ')' );
-    svg.appendChild(cir)
+    svg.appendChild(cir);
+    wires.push(cir);
 }
 
 
@@ -207,6 +304,18 @@ var updateVectors = function(e) {
 	    vector_field[i][j].update( e.offsetX, e.offsetY, wire_current );
 	}
     }
+}
+
+var updateVectorsBecauseDrag = function(e, wire) {
+    var i;
+    for (i = 0; i < vector_field.length; i++) {
+	var j;
+	for (j = 0; j < vector_field[i].length; j++){
+	    vector_field[i][j].dragupdate( e.offsetX, e.offsetY, wire );
+	}
+    }
+    wire.xcor = e.offsetX;
+    wire.ycor = e.offsetY;
 }
 
 
@@ -231,3 +340,35 @@ currentSlider.oninput = function() {
 
  
 vector_field[vector_field.length - 6][5].setAttribute("stroke-width", "5");
+
+
+////////////DRAGGING STUFF
+
+var selectedElement = null;
+
+function makeDraggable(evt) {
+    console.log("drag")
+    var element = evt.target;
+    element.addEventListener('mousedown', startDrag);
+    element.addEventListener('mousemove', drag);
+    element.addEventListener('mouseup', endDrag);
+    element.addEventListener('mouseleave', endDrag);
+    
+    function startDrag(evt) {
+	selectedElement = evt.target;
+    }
+    function drag(evt) {
+	if (selectedElement) {
+	    if (selectedElement.tagName != "svg" ){
+		evt.preventDefault();
+		var x = parseFloat(selectedElement.getAttributeNS(null, "x"));
+		selectedElement.setAttributeNS(null, "cx", evt.offsetX);
+		selectedElement.setAttributeNS(null, "cy", evt.offsetY);
+		updateVectorsBecauseDrag(evt, selectedElement);
+	    }
+	}
+    }
+    function endDrag(evt) {
+	selectedElement = null;
+    }
+}
