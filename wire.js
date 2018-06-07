@@ -104,11 +104,12 @@ var makeVector = function(xcor, ycor, xmag, ymag) {
 	
 	//var fill = "rgb(" + (255 -Math.floor(-1*Math.log(mag)*5)) + "," + Math.floor(-1*Math.log(mag)*5) + "," + Math.floor(-1*Math.log(mag)*5) + " )";
 
-	var red = 100;
-	var green = 100; //255 - (((Math.floor(Math.log(mag)) + 13) * 50));
-	var blue = 100;
+	var red = 0;
+	var green = 0; //255 - (((Math.floor(Math.log(mag)) + 13) * 50));
+	var blue = 0;
 	//var transparency = 1.0 - ( 1.0 / ( Math.floor(Math.log(mag)) + 13 ) );
-	var transparency = (( Math.floor(Math.log(mag)) + 13 ) * 0.3 );
+	//var transparency = (( Math.floor(Math.log(mag)) + 13 ) * 0.3 );
+	var transparency = (((Math.log(mag)) + 13 ) * 0.3 )/4;
 	makeColorVal(green);
 	makeTransparencyVal(transparency);
 	var fill = "rgb(" + red + "," + green + "," + blue + "," + transparency + ")";
@@ -199,11 +200,12 @@ var makeVector = function(xcor, ycor, xmag, ymag) {
 	
 	//var fill = "rgb(" + (255 -Math.floor(-1*Math.log(mag)*5)) + "," + Math.floor(-1*Math.log(mag)*5) + "," + Math.floor(-1*Math.log(mag)*5) + " )";
 
-	var red = 100;
-	var green = 100; //255 - (((Math.floor(Math.log(mag)) + 13) * 50));
-	var blue = 100;
+	var red = 0;
+	var green = 0; //255 - (((Math.floor(Math.log(mag)) + 13) * 50));
+	var blue = 0;
 	//var transparency = 1.0 - ( 1.0 / ( Math.floor(Math.log(mag)) + 13 ) );
-	var transparency = (( Math.floor(Math.log(mag)) + 13 ) * 0.3 );
+	//var transparency = (( Math.floor(Math.log(mag)) + 13 ) * 0.3 );
+	var transparency = (((Math.log(mag)) + 13 ) * 0.3 )/4;
 	makeColorVal(green);
 	makeTransparencyVal(transparency);
 	var fill = "rgb(" + red + "," + green + "," + blue + "," + transparency + ")";
