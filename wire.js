@@ -99,11 +99,23 @@ var makeVector = function(xcor, ycor, xmag, ymag) {
 	};
 
 	angle += 90;
+
 	var mag = Math.sqrt(vector.xmag * vector.xmag + vector.ymag * vector.ymag);
-	var fill = "rgb(" + (255 -Math.floor(-1*Math.log(mag)*5)) + "," + Math.floor(-1*Math.log(mag)*5) + "," + Math.floor(-1*Math.log(mag)*5) + " )";
+	
+	//var fill = "rgb(" + (255 -Math.floor(-1*Math.log(mag)*5)) + "," + Math.floor(-1*Math.log(mag)*5) + "," + Math.floor(-1*Math.log(mag)*5) + " )";
+
+	var red = 100;
+	var green = 100; //255 - (((Math.floor(Math.log(mag)) + 13) * 50));
+	var blue = 100;
+	//var transparency = 1.0 - ( 1.0 / ( Math.floor(Math.log(mag)) + 13 ) );
+	var transparency = (( Math.floor(Math.log(mag)) + 13 ) * 0.3 );
+	makeColorVal(green);
+	makeTransparencyVal(transparency);
+	var fill = "rgb(" + red + "," + green + "," + blue + "," + transparency + ")";
 	vector.setAttribute("stroke", fill);
+	
 	vector.setAttribute("stroke-width", 5);
-	console.log("stroke" , vector.getAttribute("stroke"));
+	//console.log("stroke" , vector.getAttribute("stroke"));
 	//console.log(angle);
 	vector.setAttribute("transform", 'rotate(' + angle + ' ' + vector.xcor + ' ' + vector.ycor + ')' );
     };
@@ -114,7 +126,7 @@ var makeVector = function(xcor, ycor, xmag, ymag) {
     vector.dragupdate = function(xcor, ycor, wire) {
 	var ydist = wire.ycor - vector.ycor;
 	var xdist = wire.xcor - vector.xcor;
-	console.log(wire.current)
+	//console.log(wire.current)
 	
 	var dist = Math.sqrt( (ydist*ydist) + (xdist*xdist) );
 	
@@ -182,6 +194,21 @@ var makeVector = function(xcor, ycor, xmag, ymag) {
 	};
 	
 	angle += 90;
+
+	var mag = Math.sqrt(vector.xmag * vector.xmag + vector.ymag * vector.ymag);
+	
+	//var fill = "rgb(" + (255 -Math.floor(-1*Math.log(mag)*5)) + "," + Math.floor(-1*Math.log(mag)*5) + "," + Math.floor(-1*Math.log(mag)*5) + " )";
+
+	var red = 100;
+	var green = 100; //255 - (((Math.floor(Math.log(mag)) + 13) * 50));
+	var blue = 100;
+	//var transparency = 1.0 - ( 1.0 / ( Math.floor(Math.log(mag)) + 13 ) );
+	var transparency = (( Math.floor(Math.log(mag)) + 13 ) * 0.3 );
+	makeColorVal(green);
+	makeTransparencyVal(transparency);
+	var fill = "rgb(" + red + "," + green + "," + blue + "," + transparency + ")";
+	vector.setAttribute("stroke", fill);
+
 	
 	//console.log(angle);
 	vector.setAttribute("transform", 'rotate(' + angle + ' ' + vector.xcor + ' ' + vector.ycor + ')' );
@@ -197,7 +224,7 @@ var makeVector = function(xcor, ycor, xmag, ymag) {
     //var pointsList = [ xcor - radius + ',' + ycor + ' ' + xcor + radius + ',' + ycor + 2 + ',' + xcor + radius + 2 + ' ' + ycor + ',' + xcor + radius + ' ' + ycor - 2 ]
     var pointsList = [ [xcor - radius, ycor ], [xcor + radius, ycor ], [ xcor + radius, ycor + 2], [ xcor + radius + 2, ycor], [ xcor + radius, ycor - 2], [xcor + radius, ycor ] ]
     vector.setAttribute("points" , pointsList) 
-    vector.setAttribute("stroke-width", 1);
+    vector.setAttribute("stroke-width", 0);
     vector.setAttribute("stroke", "black");
     var angle = 0;
     if (isNaN( Math.atan(ymag / xmag) )) {
@@ -266,7 +293,7 @@ var makeVectorField = function(cols, rows) {
     }
 };
 
-makeVectorField(25, 15);
+makeVectorField(60, 20);
 console.log(vector_field);
 
 var displayVectors = function(){
@@ -290,8 +317,15 @@ var addWire = function(e) {
     cir.setAttribute("cy", e.offsetY);
     cir.setAttribute("r", 10);
     cir.setAttribute("fill", "blue");
-    if (wire_current == 1)
+    if (wire_current > 0) {
 	cir.setAttribute("fill", "red");
+    } else if (wire_current == 0) {
+	console.log("wire with no current does nothing");
+	cir.setAttribute("fill", "green");
+    } else {
+	cir.setAttribute("fill", "blue");
+    }
+    
     cir.setAttribute("stroke", "black");
     cir.setAttribute("stroke-width", 5);
     
@@ -347,7 +381,7 @@ currentSlider.oninput = function() {
 }
 
  
-vector_field[vector_field.length - 6][5].setAttribute("stroke-width", "5");
+vector_field[vector_field.length - 6][5].setAttribute("stroke-width", "10");
 
 
 ////////////DRAGGING STUFF
@@ -379,4 +413,27 @@ function makeDraggable(evt) {
     function endDrag(evt) {
 	selectedElement = null;
     }
+}
+
+
+
+var makeColorVal = function( num ) {
+    if (num < 0) {
+	num = 0;
+    } else if (num > 255) {
+	num = 255;
+    } else {
+	num = num;
+    }
+}
+
+var makeTransparencyVal = function (num) {
+    if (num < 0.1) {
+	num = 0.1;
+    } else if (num > 1) {
+	num = 1;
+    } else {
+	num = num;
+    }
+
 }
