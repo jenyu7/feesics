@@ -404,11 +404,13 @@ function makeDraggable(evt) {
     function drag(evt) {
 	if (selectedElement) {
 	    if (selectedElement.tagName != "svg" ){
-		evt.preventDefault();
-		var x = parseFloat(selectedElement.getAttributeNS(null, "x"));
-		selectedElement.setAttributeNS(null, "cx", evt.offsetX);
-		selectedElement.setAttributeNS(null, "cy", evt.offsetY);
-		updateVectorsBecauseDrag(evt, selectedElement);
+		if (selectedElement.tagName == "circle" ){
+		    evt.preventDefault();
+		    var x = parseFloat(selectedElement.getAttributeNS(null, "x"));
+		    selectedElement.setAttributeNS(null, "cx", evt.offsetX);
+		    selectedElement.setAttributeNS(null, "cy", evt.offsetY);
+		    updateVectorsBecauseDrag(evt, selectedElement);
+		}
 	    }
 	}
     }
