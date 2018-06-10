@@ -1,5 +1,10 @@
 var wire_current = 1; //or -1
 var wires = new Array()
+
+var gridDrawn = false;
+
+wire_info = document.getElementById("wire_info");
+
 ////////////////////IMPORTANT THINGS
 /*
 
@@ -334,7 +339,9 @@ var addWire = function(e) {
     //cir.setAttribute("onload", "makeDraggable(evt)");
     cir.current = wire_current;
     //so far this next line just prints the xcor of the vector
-    //cir.setAttribute("onclick", 'console.log(" this is a wire ",' + cir.current + ')' );
+    //cir.setAttribute("click", function() { console.log(8); } )  ;
+    cir.addEventListener("click", function(){wire_info.innerHTML = cir.current;} );
+    
     svg.appendChild(cir);
     wires.push(cir);
 }
@@ -441,3 +448,52 @@ var makeTransparencyVal = function (num) {
     }
 
 }
+
+
+///////////////DRAW THE GRID
+
+var gridButton = document.getElementById("gridButton");
+
+gridButton.addEventListener("click", function() {
+    drawGrid();
+} )
+
+var drawGrid = function(){
+    if (!gridDrawn) {
+	var i;
+	for (i = 0; i < vector_field.length; i++) {
+	    var line;
+	    line = document.createElementNS("http://www.w3.org/2000/svg", "line"); //circle, text
+	    line.setAttribute("x1", vector_field[i][0].xcor);
+	    line.setAttribute("x2", vector_field[i][0].xcor);
+	    line.setAttribute("y1", 0);
+	    line.setAttribute("y2", height);
+	    line.setAttribute("stroke-width", 2);
+	    line.setAttribute("stroke", "black");
+	    svg.appendChild(line);
+	    
+	}
+	var i;
+	for (i = 0; i < vector_field[0].length; i++) {
+	    var line;
+	    line = document.createElementNS("http://www.w3.org/2000/svg", "line"); //circle, text
+	    line.setAttribute("x1", 0);
+	    line.setAttribute("x2", width);
+	    line.setAttribute("y1", vector_field[0][i].ycor);
+	    line.setAttribute("y2", vector_field[0][i].ycor);
+	    line.setAttribute("stroke-width", 2);
+	    line.setAttribute("stroke", "black");
+	    svg.appendChild(line);    
+	}
+	gridButton.innerHTML = "Remove Grid";
+	gridDrawn = true;
+    } else {
+	d3.selectAll("line").remove()
+	gridButton.innerHTML = "Draw the Grid";
+	gridDrawn = false;
+
+    }
+}
+
+
+
