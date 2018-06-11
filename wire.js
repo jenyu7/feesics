@@ -436,7 +436,7 @@ var h2 = svg2.getAttribute('height');
 var w2 = svg2.getAttribute('width');
 
 svg2.addEventListener("click", function(e){
-    makeWires();
+    //makeWires();
 } );
 
 /*svg2.addEventListener("mousedown", function(e){
@@ -451,24 +451,56 @@ svg2.addEventListener("click", function(e){
 
 var makeWires = function() {
 
-    var wire2 = document.createElementNS("http://www.w3.org/200/svg", "line");
+    var wire1 = document.createElementNS("http://www.w3.org/2000/svg", "line");
+    wire1.setAttribute("x1", 600);
+    wire1.setAttribute("x2", 600);
+    wire1.setAttribute("y1", 0);
+    wire1.setAttribute("y2", h2);
+    wire1.setAttribute("stroke-width", 20);
+    wire1.setAttribute("stroke", "black");
+    svg2.appendChild(wire1);
+
+    var wire2 = document.createElementNS("http://www.w3.org/2000/svg", "line");
     wire2.setAttribute("x1", 400);
     wire2.setAttribute("x2", 400);
     wire2.setAttribute("y1", 0);
     wire2.setAttribute("y2", h2);
-    wire2.setAttribute("stroke-width", 6);
+    wire2.setAttribute("stroke-width", 20);
     wire2.setAttribute("stroke", "black");
     svg2.appendChild(wire2);
 
-    var wire1 = document.createElementNS("http://www.w3.org/2000/svg", "line");
-    wire1.setAttribute("x1", 500);
-    wire1.setAttribute("x2", 500);
-    wire1.setAttribute("y1", 0);
-    wire1.setAttribute("y2", h2);
-    wire1.setAttribute("stroke-width", 6);
-    wire1.setAttribute("stroke", "black");
-    svg2.appendChild(wire1);
+    var pointsList = [ [xcor - radius, ycor ], [xcor + radius, ycor ], [ xcor + radius, ycor + 2], [ xcor + radius + 2, ycor], [ xcor + radius, ycor - 2], [xcor + radius, ycor ] ]
+    vector.setAttribute("points" , pointsList) 
 
+    //makeDraggable(evt);
+    
+};
+
+var makeMag = function(xcor, ycor, type){
+    var mag = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
+    mag.setAttribute("stroke-width", 10);
+    //going into page
+    if (type == 0){
+	mag.setAttribute("stroke", "red");
+	
+    }
+    //going out of page
+    else{
+    }
+};
+
+var makeMagField = function(cols, rows) {
+    vector_field = new Array(cols);
+    var i;
+    for (i = 0; i < vector_field.length; i++) {
+	xincrement = width / vector_field.length
+	vector_field[i] = new Array(rows);
+	var j;
+	for (j = 0; j < vector_field[i].length; j++){
+	    yincrement = height / vector_field[i].length;
+	    vector_field[i][j] = makeVector(xincrement * i, height - (yincrement * j), 0,0)
+	}
+    }
 };
 /*
 var addWire = function(e) {
