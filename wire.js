@@ -5,25 +5,6 @@ var gridDrawn = false;
 
 wire_info = document.getElementById("wire_info");
 
-////////////////////IMPORTANT THINGS
-/*
-
-
-line = document.createElementNS("http://www.w3.org/2000/svg", "line"); //circle, text
-line.setAttribute("x1", 10);
-line.setAttribute("x2", 10);
-line.setAttribute("y1", 10);
-line.setAttribute("y2", 10);
-line.setAttribute("stroke-width", 10);
-line.setAttribute("stroke", "black");
-svg.appendChild(line);
-
-
-*/
-
-//e.clientX this is for the screen
-//e.offsetX this is for the svg
-
 
 var svg = document.getElementById("vimage");
 var height = svg.getAttribute('height');
@@ -223,12 +204,6 @@ var makeVector = function(xcor, ycor, xmag, ymag) {
     
     
     var radius = 15;
-    //var vector = document.createElementNS("http://www.w3.org/2000/svg", "line");
-    //vector.setAttribute("x1", xcor - radius);
-    //vector.setAttribute("y1", ycor );
-    //vector.setAttribute("x2", xcor + radius);
-    //vector.setAttribute("y2", ycor );
-    //var pointsList = [ xcor - radius + ',' + ycor + ' ' + xcor + radius + ',' + ycor + 2 + ',' + xcor + radius + 2 + ' ' + ycor + ',' + xcor + radius + ' ' + ycor - 2 ]
     var pointsList = [ [xcor - radius, ycor ], [xcor + radius, ycor ], [ xcor + radius, ycor + 2], [ xcor + radius + 2, ycor], [ xcor + radius, ycor - 2], [xcor + radius, ycor ] ]
     vector.setAttribute("points" , pointsList) 
     vector.setAttribute("stroke-width", 0);
@@ -242,47 +217,6 @@ var makeVector = function(xcor, ycor, xmag, ymag) {
     vector.setAttribute("transform", 'rotate(' + angle + ' ' + xcor + ' ' + ycor + ')' );
 
     svg.appendChild(vector);
-
-    /*
-    return {xcor: xcor,
-	    ycor: ycor,
-	    xmag: xmag,
-	    ymag: ymag,
-	    addtoY: function(newymag){ ymag += newymag; },
-	    addtoX: function(newxmag){ xmag += newxmag; },
-	    addVector : function(newX, newY){ addtoX(newX); addtoY(newY); },
-	    
-	    display : function() {
-		//var cir = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-		//cir.setAttribute("cx", xcor);
-		//cir.setAttribute("cy", ycor);
-		//cir.setAttribute("r", 10);
-		//cir.setAttribute("fill", "blue");
-		//cir.setAttribute("stroke", "black");
-		////so far this next line just prints the xcor of the vector
-		//cir.setAttribute("onclick", 'console.log(' + xcor + ')' );
-		//svg.appendChild(cir)
-
-		var radius = 10;
-		var line = document.createElementNS("http://www.w3.org/2000/svg", "line");
-		line.setAttribute("x1", xcor - radius);
-		line.setAttribute("y1", ycor - radius);
-		line.setAttribute("x2", xcor + radius);
-		line.setAttribute("y2", ycor + radius);
-		line.setAttribute("stroke-width", 1);
-		line.setAttribute("stroke", "black");
-		var angle = 0;
-		if (isNaN( Math.atan(ymag / xmag) )) {
-		    angle = 0;
-		} else {
-		    angle = Math.atan(ymag / xmag);
-		}
-		line.setAttribute("transform", 'rotate(' + angle + ' ' + xcor + ' ' + ycor + ')' );
-		svg.appendChild(line);
-	    }
-	   }
-    */
-
     return vector;
 };
 
@@ -314,8 +248,6 @@ var displayVectors = function(){
 }
 //displayVectors();
 
-
-
 var addWire = function(e) {
     var cir = document.createElementNS("http://www.w3.org/2000/svg", "circle");
     cir.setAttribute("cx", e.offsetX);
@@ -340,7 +272,9 @@ var addWire = function(e) {
     cir.current = wire_current;
     //so far this next line just prints the xcor of the vector
     //cir.setAttribute("click", function() { console.log(8); } )  ;
-    cir.addEventListener("click", function(){wire_info.innerHTML = cir.current;} );
+    cir.addEventListener("click", function(){
+	wire_info.innerHTML = "Current of Selected Wire: " + cir.current;}
+	);
     
     svg.appendChild(cir);
     wires.push(cir);
@@ -372,6 +306,7 @@ var updateVectorsBecauseDrag = function(e, wire) {
 
 
 /////////////////FOR THE SLIDER
+/*
 var slider = document.getElementById("myRange");
 var output = document.getElementById("demo");
 output.innerHTML = slider.value; // Display the default slider value
@@ -379,7 +314,7 @@ output.innerHTML = slider.value; // Display the default slider value
 // Update the current slider value (each time you drag the slider handle)
 slider.oninput = function() {
     output.innerHTML = this.value;
-}
+}*/
 
 var currentSlider = document.getElementById("currentRange");
 var currentOutput = document.getElementById("currentOutput");
@@ -495,5 +430,151 @@ var drawGrid = function(){
     }
 }
 
+//Simulation 2
+var svg2 = document.getElementById("timage");
+var h2 = svg2.getAttribute('height');
+var w2 = svg2.getAttribute('width');
+
+svg2.addEventListener("click", function(e){
+    makeWires();
+} );
+
+/*svg2.addEventListener("mousedown", function(e){
+    selectedElement = e.target;
+    if (selectedElement.tagName != "circle") {
+	addWire(e);
+	updateVectors(e);    };
+} );*/
 
 
+//var vector = {xmag:"500", color:"white"};
+
+var makeWires = function() {
+
+    var wire2 = document.createElementNS("http://www.w3.org/200/svg", "line");
+    wire2.setAttribute("x1", 400);
+    wire2.setAttribute("x2", 400);
+    wire2.setAttribute("y1", 0);
+    wire2.setAttribute("y2", h2);
+    wire2.setAttribute("stroke-width", 6);
+    wire2.setAttribute("stroke", "black");
+    svg2.appendChild(wire2);
+
+    var wire1 = document.createElementNS("http://www.w3.org/2000/svg", "line");
+    wire1.setAttribute("x1", 500);
+    wire1.setAttribute("x2", 500);
+    wire1.setAttribute("y1", 0);
+    wire1.setAttribute("y2", h2);
+    wire1.setAttribute("stroke-width", 6);
+    wire1.setAttribute("stroke", "black");
+    svg2.appendChild(wire1);
+
+};
+/*
+var addWire = function(e) {
+    var cir = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+    cir.setAttribute("cx", e.offsetX);
+    cir.xcor = e.offsetX;
+    cir.ycor = e.offsetY;
+    cir.setAttribute("cy", e.offsetY);
+    cir.setAttribute("r", 10);
+    cir.setAttribute("fill", "blue");
+    if (wire_current > 0) {
+	cir.setAttribute("fill", "red");
+    } else if (wire_current == 0) {
+	console.log("wire with no current does nothing");
+	cir.setAttribute("fill", "green");
+    } else {
+	cir.setAttribute("fill", "blue");
+    }
+    
+    cir.setAttribute("stroke", "black");
+    cir.setAttribute("stroke-width", 5);
+    
+    //cir.setAttribute("onload", "makeDraggable(evt)");
+    cir.current = wire_current;
+    //so far this next line just prints the xcor of the vector
+    //cir.setAttribute("click", function() { console.log(8); } )  ;
+    cir.addEventListener("click", function(){
+	wire_info.innerHTML = "Current of Selected Wire: " + cir.current;}
+	);
+    
+    svg.appendChild(cir);
+    wires.push(cir);
+}
+*/
+
+/*
+var updateVectorsBecauseDrag = function(e, wire) {
+    var i;
+    for (i = 0; i < vector_field.length; i++) {
+	var j;
+	for (j = 0; j < vector_field[i].length; j++){
+	    vector_field[i][j].dragupdate( e.offsetX, e.offsetY, wire );
+	}
+    }
+    wire.xcor = e.offsetX;
+    wire.ycor = e.offsetY;
+}*/
+
+
+
+/////////////////FOR THE SLIDER
+/*
+var slider = document.getElementById("myRange");
+var output = document.getElementById("demo");
+output.innerHTML = slider.value; // Display the default slider value
+
+// Update the current slider value (each time you drag the slider handle)
+slider.oninput = function() {
+    output.innerHTML = this.value;
+}
+
+var currentSlider = document.getElementById("currentRange");
+var currentOutput = document.getElementById("currentOutput");
+currentOutput.innerHTML = currentSlider.value; // Display the default slider value
+currentSlider.oninput = function() {
+    currentOutput.innerHTML = this.value;
+    wire_current = this.value;
+}
+
+ 
+vector_field[vector_field.length - 6][5].setAttribute("stroke-width", "10");
+*/
+
+////////////DRAGGING STUFF
+
+/*
+
+var selectedElement = null;
+
+function makeDraggable(evt) {
+    console.log("drag")
+    var element = evt.target;
+    element.addEventListener('mousedown', startDrag);
+    element.addEventListener('mousemove', drag);
+    element.addEventListener('mouseup', endDrag);
+    element.addEventListener('mouseleave', endDrag);
+    
+    function startDrag(evt) {
+	selectedElement = evt.target;
+    }
+    function drag(evt) {
+	if (selectedElement) {
+	    if (selectedElement.tagName != "svg" ){
+		if (selectedElement.tagName == "circle" ){
+		    evt.preventDefault();
+		    var x = parseFloat(selectedElement.getAttributeNS(null, "x"));
+		    selectedElement.setAttributeNS(null, "cx", evt.offsetX);
+		    selectedElement.setAttributeNS(null, "cy", evt.offsetY);
+		    updateVectorsBecauseDrag(evt, selectedElement);
+		}
+	    }
+	}
+    }
+    function endDrag(evt) {
+	selectedElement = null;
+    }
+}
+
+*/

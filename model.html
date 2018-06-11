@@ -9,29 +9,28 @@
       <br>
       <h1> Wire Force and Field Models</h1>
       <p>
-        yuh
+        By Ibnul Jahan and Jen Yu <br>
+	Ms. Sharaf's Period 8/9 Physics C
       </p>
       <hr>
+      <h3> Cross Sectional View of Straight Wires with a Current, and the Magnetic Field Lines of the Wires</h3>
+      <p> The magnetic field lines around a long straight wire with a current form concentric circles around the wire. Using the right hand rule, you can find the direction of the magnetic field by pointing your thumb in the direction of the current and curling the fingers of your right hand around the wire. It is perpendicular to the wire. In this simulation, we display the strength of the magnetic field around a straight wire through the opacity of the vectors in the field: the darker the arrow, the stronger the field. You will notice that the darkest arrows are nearest to the wire, because magnetic field strength depends on the distance from the wire.<br>
+	Negative currents go out of the page and are blue colored; Positive currents go into the page and are red colored; No current wires produce no change in the vector field and are colored green.
+      </p> 
       <svg id="vimage" height="600" width="1000" style="border: 1px solid;" onload="makeDraggable(evt)">
       </svg>
-
       <div class="slidecontainer">
+	<p> <b>Set the current and click on the box above to create a wire.</b></p>
+	<p>Current: <span id="currentOutput"></span></p>
 	<input type="range" min="-10" max="10" value="1" step="1" class="slider" id="currentRange">
-	<p>Value: <span id="currentOutput"></span></p>
       </div>
-
-      <button id="gridButton"> Draw the Grid </button>
-      <p> Wire Info </p>
-      <p id="wire_info"> </p>
-      
-      <div class="slidecontainer">
-	<input type="range" min="1" max="100" value="50" class="slider" id="myRange">
-	<p>Value: <span id="demo"></span></p>
-      </div>
-
-     
-
-      
+      <p> <b>Click on a wire above to see its current.</b> </p>
+      <p id="wire_info"> Current of Selected Wire: None selected</p>
+      <button id="gridButton"> Draw a Grid </button>
+      <br><br>
+      <h3>Top-Down View of Two Straight Wires with Current and their Magnetic Fields </h3>
+      <svg id = "timage" height="600" width="1000" style="border: 1px solid;" onload="makeDraggable(evt)">
+      </svg>
       
     </center>
     <script src="https://d3js.org/d3.v4.min.js" charset="utf-8"></script>
