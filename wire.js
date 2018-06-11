@@ -469,39 +469,81 @@ var makeWires = function() {
     wire2.setAttribute("stroke", "black");
     svg2.appendChild(wire2);
 
-    var pointsList = [ [xcor - radius, ycor ], [xcor + radius, ycor ], [ xcor + radius, ycor + 2], [ xcor + radius + 2, ycor], [ xcor + radius, ycor - 2], [xcor + radius, ycor ] ]
-    vector.setAttribute("points" , pointsList) 
+
 
     //makeDraggable(evt);
     
 };
 
 var makeMag = function(xcor, ycor, type){
-    var mag = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
-    mag.setAttribute("stroke-width", 10);
+    var mag;
     //going into page
     if (type == 0){
+	mag = document.createElementNS("http://www.w3.org/2000/svg", "polyline");
 	mag.setAttribute("stroke", "red");
+	var points = [[xcor-5,ycor+5], [xcor+5,ycor-5], [xcor, ycor], [xcor+5,ycor+5], [xcor-5, ycor-5]];
+	mag.setAttribute("points", points);
 	
     }
     //going out of page
+    
     else{
+	mag = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+    mag.setAttribute("stroke", "blue");
+    mag.setAttribute("fill", "blue");
+	mag.setAttribute("r", 2.5);
+	mag.setAttribute("cx", xcor);
+	mag.setAttribute("cy", ycor);
     }
+    mag.setAttribute("stroke-width", 3);
+    svg2.appendChild(mag);
+    return mag;
 };
 
-var makeMagField = function(cols, rows) {
-    vector_field = new Array(cols);
+var magfield;
+//c: 1 up 0 down
+var makeMagField = function(cols, rows, x1, x2, c1, c2) {
+    magfield = new Array(cols);
+    var d = (x1+x2)/2;
     var i;
-    for (i = 0; i < vector_field.length; i++) {
-	xincrement = width / vector_field.length
-	vector_field[i] = new Array(rows);
+    for (i = 0; i < magfield.length; i++) {
+	xincrement = width / magfield.length
+	magfield[i] = new Array(rows);
 	var j;
-	for (j = 0; j < vector_field[i].length; j++){
-	    yincrement = height / vector_field[i].length;
-	    vector_field[i][j] = makeVector(xincrement * i, height - (yincrement * j), 0,0)
+	for (j = 0; j < magfield[i].length; j++){
+	    yincrement = height / magfield[i].length;
+	    var x = xincrement *i;
+	    var y = height-yincrement*j;
+	    if (x < d && x > x1+20){
+		if (c1 == 0)
+		    magfield[i][j] = makeMag(x, y, 1);
+		else
+		    magfield[i][j] = makeMag(x, y, 0);
+	    }
+	    else if (x < x1){
+		if (c1 == 0)
+		    magfield[i][j] = makeMag(x, y, 0);
+		else
+		    magfield[i][j] = makeMag(x, y, 1);
+	    }
+	    else if (x > d && x < x2){ 
+		if (c1 == 0)
+		    magfield[i][j] = makeMag(x, y, 0);
+		else
+		    magfield[i][j] = makeMag(x, y, 1);
+	    }
+	    else{
+		if (c1 == 0)
+		    magfield[i][j] = makeMag(x, y, 1);
+		else
+		    magfield[i][j] = makeMag(x, y, 0);
+	    }
+	    //magfield[i][j] = makeMag(xincrement * i, height - (yincrement * j), 0,0)
 	}
     }
 };
+
+makeMagField(60, 20, 400, 600, 1, 0);
 /*
 var addWire = function(e) {
     var cir = document.createElementNS("http://www.w3.org/2000/svg", "circle");
