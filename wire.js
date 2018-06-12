@@ -449,11 +449,11 @@ svg2.addEventListener("click", function(e){
 
 //var vector = {xmag:"500", color:"white"};
 
-var makeWires = function() {
+var makeWires = function(x1, x2) {
 
     var wire1 = document.createElementNS("http://www.w3.org/2000/svg", "line");
-    wire1.setAttribute("x1", 600);
-    wire1.setAttribute("x2", 600);
+    wire1.setAttribute("x1", x1);
+    wire1.setAttribute("x2", x1);
     wire1.setAttribute("y1", 0);
     wire1.setAttribute("y2", h2);
     wire1.setAttribute("stroke-width", 20);
@@ -461,8 +461,8 @@ var makeWires = function() {
     svg2.appendChild(wire1);
 
     var wire2 = document.createElementNS("http://www.w3.org/2000/svg", "line");
-    wire2.setAttribute("x1", 400);
-    wire2.setAttribute("x2", 400);
+    wire2.setAttribute("x1", x2);
+    wire2.setAttribute("x2", x2);
     wire2.setAttribute("y1", 0);
     wire2.setAttribute("y2", h2);
     wire2.setAttribute("stroke-width", 20);
@@ -515,25 +515,25 @@ var makeMagField = function(cols, rows, x1, x2, c1, c2) {
 	    var x = xincrement *i;
 	    var y = height-yincrement*j;
 	    if (x < d && x > x1+20){
-		if (c1 == 0)
+		if (c1 < 0)
 		    magfield[i][j] = makeMag(x, y, 1);
 		else
 		    magfield[i][j] = makeMag(x, y, 0);
 	    }
 	    else if (x < x1){
-		if (c1 == 0)
+		if (c1 < 0)
 		    magfield[i][j] = makeMag(x, y, 0);
 		else
 		    magfield[i][j] = makeMag(x, y, 1);
 	    }
 	    else if (x > d && x < x2){ 
-		if (c1 == 0)
+		if (c2 < 0)
 		    magfield[i][j] = makeMag(x, y, 0);
 		else
 		    magfield[i][j] = makeMag(x, y, 1);
 	    }
 	    else{
-		if (c1 == 0)
+		if (c2 < 0)
 		    magfield[i][j] = makeMag(x, y, 1);
 		else
 		    magfield[i][j] = makeMag(x, y, 0);
@@ -543,7 +543,96 @@ var makeMagField = function(cols, rows, x1, x2, c1, c2) {
     }
 };
 
-makeMagField(60, 20, 400, 600, 1, 0);
+var left_current, right_current;
+
+var leftSlider = document.getElementById("wire1");
+var leftCurrent = document.getElementById("leftCurrent");
+leftCurrent.innerHTML = leftSlider.value; // Display the default slider value
+left_current = leftSlider.value;
+leftSlider.oninput = function() {
+    leftCurrent.innerHTML = this.value;
+    left_current = this.value;
+};
+var rightSlider = document.getElementById("wire2");
+var rightCurrent = document.getElementById("rightCurrent");
+rightCurrent.innerHTML = rightSlider.value; // Display the default slider value
+right_current = rightSlider.value;
+rightSlider.oninput = function() {
+    rightCurrent.innerHTML = this.value;
+    right_current = this.value;
+};
+
+var distance;
+var dslider = document.getElementById("dist");
+var dist = document.getElementById("distance");
+dist.innerHTML = dslider.value;
+distance = parseInt(dslider.value);
+dslider.oninput = function(){
+    dist.innerHTML = this.value;
+    distance = parseInt(this.value);
+};
+
+console.log(distance);
+makeMagField(60, 20, 500-parseInt(distance), 500+parseInt(distance), left_current, right_current);
+makeWires(500-parseInt(distance), 500+parseInt(distance));
+
+var updateMagField = function(){
+    var x1 = 500-distance;
+    var x2 = 500+distance;
+    var c1 = left_current;
+    var c2 = right_current;
+    var d = (x1+x2)/2;
+    var i, j;
+    while (svg2.lastChild) {
+	svg2.removeChild(svg2.lastChild);
+    }
+    for (var x = 0; x < magfield.length; x++) {
+	for (var y = 0; y < magfield[x].length; y++) {
+            magfield[x][y] = 0;
+	}
+
+    }
+    
+    for (i = 0; i < magfield.length; i++) {
+	xincrement = width / magfield.length;
+	for (j = 0; j < magfield[i].length; j++){
+	    yincrement = height / magfield[i].length;
+	    var x = xincrement *i;
+	    var y = height-yincrement*j;
+	    if (x < d && x > x1+20){
+		if (c1 < 0)
+		    magfield[i][j] = makeMag(x, y, 1);
+		else
+		    magfield[i][j] = makeMag(x, y, 0);
+	    }
+	    else if (x < x1){
+		if (c1 < 0)
+		    magfield[i][j] = makeMag(x, y, 0);
+		else
+		    magfield[i][j] = makeMag(x, y, 1);
+	    }
+	    else if (x > d && x < x2){ 
+		if (c2 < 0)
+		    magfield[i][j] = makeMag(x, y, 0);
+		else
+		    magfield[i][j] = makeMag(x, y, 1);
+	    }
+	    else{
+		if (c2 < 0)
+		    magfield[i][j] = makeMag(x, y, 1);
+		else
+		    magfield[i][j] = makeMag(x, y, 0);
+	    }
+	    //magfield[i][j] = makeMag(xincrement * i, height - (yincrement * j), 0,0)
+	}
+    }
+    makeWires(x1, x2);
+};
+
+var update = document.getElementById("update");
+update.addEventListener("click", updateMagField);
+//updateMagField();
+
 /*
 var addWire = function(e) {
     var cir = document.createElementNS("http://www.w3.org/2000/svg", "circle");
