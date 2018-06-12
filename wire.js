@@ -237,6 +237,15 @@ var makeVectorField = function(cols, rows) {
 makeVectorField(60, 20);
 console.log(vector_field);
 
+var clear = document.getElementById("clear");
+var cf = function(){
+    while (svg.lastChild) {
+	svg.removeChild(svg.lastChild);
+    }
+    makeVectorField(60, 20);
+};
+clear.addEventListener("click", cf );
+
 var displayVectors = function(){
     var i;
     for (i = 0; i < vector_field.length; i++) {
@@ -548,18 +557,18 @@ var left_current, right_current;
 var leftSlider = document.getElementById("wire1");
 var leftCurrent = document.getElementById("leftCurrent");
 leftCurrent.innerHTML = leftSlider.value; // Display the default slider value
-left_current = leftSlider.value;
+left_current = parseInt(leftSlider.value);
 leftSlider.oninput = function() {
     leftCurrent.innerHTML = this.value;
-    left_current = this.value;
+    left_current = parseInt(this.value);
 };
 var rightSlider = document.getElementById("wire2");
 var rightCurrent = document.getElementById("rightCurrent");
 rightCurrent.innerHTML = rightSlider.value; // Display the default slider value
-right_current = rightSlider.value;
+right_current = parseInt(rightSlider.value);
 rightSlider.oninput = function() {
     rightCurrent.innerHTML = this.value;
-    right_current = this.value;
+    right_current = parseInt(this.value);
 };
 
 var distance;
@@ -572,6 +581,15 @@ dslider.oninput = function(){
     distance = parseInt(this.value);
 };
 
+var s1 = document.getElementById("mags");
+s1.innerHTML = (4*Math.PI*Math.pow(10, -7)*left_current)/(2*Math.PI*distance);
+var s2 = document.getElementById("mags2");
+s2.innerHTML = (4*Math.PI*Math.pow(10, -7)*right_current)/(2*Math.PI*distance);
+var t = document.getElementById("t");
+if(left_current*right_current > 0)
+	t.innerHTML = "attract";
+    else
+	t.innerHTML = "repel";
 console.log(distance);
 makeMagField(60, 20, 500-parseInt(distance), 500+parseInt(distance), left_current, right_current);
 makeWires(500-parseInt(distance), 500+parseInt(distance));
@@ -599,7 +617,7 @@ var updateMagField = function(){
 	    yincrement = height / magfield[i].length;
 	    var x = xincrement *i;
 	    var y = height-yincrement*j;
-	    if (x < d && x > x1+20){
+	    if (x < d && x > x1){
 		if (c1 < 0)
 		    magfield[i][j] = makeMag(x, y, 1);
 		else
@@ -627,6 +645,12 @@ var updateMagField = function(){
 	}
     }
     makeWires(x1, x2);
+    s1.innerHTML = (4*Math.PI*Math.pow(10, -7)*left_current)/(2*Math.PI*distance);
+    s2.innerHTML = (4*Math.PI*Math.pow(10, -7)*right_current)/(2*Math.PI*distance);
+    if(c1*c2 > 0)
+	t.innerHTML = "attract";
+    else
+	t.innerHTML = "repel";
 };
 
 var update = document.getElementById("update");

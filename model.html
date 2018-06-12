@@ -26,18 +26,20 @@
       </div>
       <p> <b>Click on a wire above to see its current.</b> </p>
       <p id="wire_info"> Current of Selected Wire: None selected</p>
-      <button id="gridButton"> Draw a Grid </button>
+      <button id="gridButton"> Draw a Grid </button> <button id="clear"> Clear </button>
       <br><br>
       <h3>Top-Down View of Two Straight Wires with Current and their Magnetic Fields </h3>
       <svg id = "timage" height="600" width="1000" style="border: 1px solid;">
       </svg>
       <div class = "slidecontainer">
+	<p> Positive current goes up; Negative current goes down. </p>
       <p> Current of left wire: <input type = "range" min="-10" max="10" value="1" step="1" class="slider" id="wire1"> <span id="leftCurrent"></span> Ampere(s)</p>
       <p> Current of right wire: <input type = "range" min="-10" max="10" value="1" step="1" class="slider" id="wire2"> <span id="rightCurrent"></span> Ampere(s) </p>
-      <p> Distance between wires: <input type = "range" min="5" max="400" value="100" step="1" class="slider" id="dist"> <span id="distance"> </span> Meter(s)</p>
+      <p> Distance between wires: <input type = "range" min="25" max="400" value="100" step="1" class="slider" id="dist"> <span id="distance"> </span> Meter(s)</p>
       </div>
-      <p>Force of Magnetic Field: <span id="mags"></span> </p>
-      <button id="update"> Update force </button>
+      <p>Magnetic Field Strength- <b>Wire 1:</b>  <span id="mags"></span> Tesla(s), <b>Wire 2:</b> <span id="mags2"></span> Tesla(s)</p>
+      <p> The wires <b><span id="t">____</span></b> each other. </p>
+      <button id="update"> Update Simulation </button>
     </center>
     <script src="https://d3js.org/d3.v4.min.js" charset="utf-8"></script>
     <script src="wire.js"></script>
