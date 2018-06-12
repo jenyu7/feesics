@@ -29,6 +29,8 @@
       <button id="gridButton"> Draw a Grid </button> <button id="clear"> Clear </button>
       <br><br>
       <h3>Top-Down View of Two Straight Wires with Current and their Magnetic Fields </h3>
+      <p>A long straight wire has a magnetic field due to its current. In the case of a long straight wire with a current I, the magnetic field lines wrap around the wire and the strength of the magnetic field depends on the distance away from the wire. In this simulation, we use conventional notation to show field lines: the "X" are field lines going into the screen, and the "." are field lines going out of the screen. There are options to toggle the current in both the left and right wires. Negative current indicates current moving towards the bottom of the page; positive current is the opposite. The distance between the two wires can be adjusted, which affects the magnetic field on each wire, and when "Update Simulation" is pressed, the magnetic field strength values will be updated, with a determination of whether the wires attract or repel. </p>
+      <p> To find magnetic field strength, we used the formula derived from Ampere's Law: <br> <img src="e.png" > <br> where B represents magnetic field strength (in Teslas), μ is the permeability constant, I is the current flowing in the wire, and r is the distance to the wire.  </p>
       <svg id = "timage" height="600" width="1000" style="border: 1px solid;">
       </svg>
       <div class = "slidecontainer">
@@ -37,7 +39,7 @@
       <p> Current of right wire: <input type = "range" min="-10" max="10" value="1" step="1" class="slider" id="wire2"> <span id="rightCurrent"></span> Ampere(s) </p>
       <p> Distance between wires: <input type = "range" min="25" max="400" value="100" step="1" class="slider" id="dist"> <span id="distance"> </span> Meter(s)</p>
       </div>
-      <p>Magnetic Field Strength- <b>Wire 1:</b>  <span id="mags"></span> Tesla(s), <b>Wire 2:</b> <span id="mags2"></span> Tesla(s)</p>
+      <p>Magnetic Field at Wire From Current in Other Wire- <b>Wire 1:</b>  <span id="mags2"></span> Tesla(s), <b>Wire 2:</b> <span id="mags"></span> Tesla(s)</p>
       <p> The wires <b><span id="t">____</span></b> each other. </p>
       <button id="update"> Update Simulation </button>
     </center>
