@@ -490,7 +490,7 @@ var makeMag = function(xcor, ycor, type){
     if (type == 0){
 	mag = document.createElementNS("http://www.w3.org/2000/svg", "polyline");
 	mag.setAttribute("stroke", "red");
-	var points = [[xcor-5,ycor+5], [xcor+5,ycor-5], [xcor, ycor], [xcor+5,ycor+5], [xcor-5, ycor-5]];
+	var points = [[xcor, ycor],[xcor-5,ycor+5], [xcor+5,ycor-5], [xcor, ycor], [xcor+5,ycor+5], [xcor-5, ycor-5]];
 	mag.setAttribute("points", points);
 	
     }
@@ -588,8 +588,10 @@ s2.innerHTML = (4*Math.PI*Math.pow(10, -7)*right_current)/(2*Math.PI*distance);
 var t = document.getElementById("t");
 if(left_current*right_current > 0)
 	t.innerHTML = "attract";
-    else
-	t.innerHTML = "repel";
+else if(left_current*right_current < 0)
+    t.innerHTML = "repel";
+else
+    t.innerHTML = "_____";
 console.log(distance);
 makeMagField(60, 20, 500-parseInt(distance), 500+parseInt(distance), left_current, right_current);
 makeWires(500-parseInt(distance), 500+parseInt(distance));
@@ -647,10 +649,12 @@ var updateMagField = function(){
     makeWires(x1, x2);
     s1.innerHTML = (4*Math.PI*Math.pow(10, -7)*left_current)/(2*Math.PI*distance);
     s2.innerHTML = (4*Math.PI*Math.pow(10, -7)*right_current)/(2*Math.PI*distance);
-    if(c1*c2 > 0)
+    if(left_current*right_current > 0)
 	t.innerHTML = "attract";
-    else
+    else if(left_current*right_current < 0)
 	t.innerHTML = "repel";
+    else
+	t.innerHTML = "_____";
 };
 
 var update = document.getElementById("update");
